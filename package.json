@@ -24,6 +24,7 @@
   "dependencies": {},
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
     "@svgr/rollup": "^4.3.0",
