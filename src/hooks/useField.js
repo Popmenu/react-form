@@ -284,7 +284,8 @@ export default function useField(
   // When the form gets dirty and when the value changes, run the validation
   React.useEffect(() => {
     setTimeout(()=> {
-      if (!validatePristine && !formApiRef.current.getFieldMeta(fieldName)?.isTouched) {
+      const isTouched = meta.isTouched || formApiRef.current.getFieldMeta(fieldName)?.isTouched
+      if (!validatePristine && !isTouched) {
         return;
       }
 
@@ -294,7 +295,7 @@ export default function useField(
         console.error('An error occurred during validation', err);
       }
     }, 0)
-  }, [fieldName, runValidation, validatePristine, value])
+  }, [meta.isTouched, fieldName, runValidation, validatePristine, value])
 
   return fieldApiRef.current
 }

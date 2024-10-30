@@ -1109,7 +1109,9 @@ function useField(fieldName) {
     setTimeout(function () {
       var _formApiRef$current$g;
 
-      if (!validatePristine && !((_formApiRef$current$g = formApiRef.current.getFieldMeta(fieldName)) !== null && _formApiRef$current$g !== void 0 && _formApiRef$current$g.isTouched)) {
+      var isTouched = meta.isTouched || ((_formApiRef$current$g = formApiRef.current.getFieldMeta(fieldName)) === null || _formApiRef$current$g === void 0 ? void 0 : _formApiRef$current$g.isTouched);
+
+      if (!validatePristine && !isTouched) {
         return;
       }
 
@@ -1119,7 +1121,7 @@ function useField(fieldName) {
         console.error('An error occurred during validation', err);
       }
     }, 0);
-  }, [fieldName, runValidation, validatePristine, value]);
+  }, [meta.isTouched, fieldName, runValidation, validatePristine, value]);
   return fieldApiRef.current;
 }
 
