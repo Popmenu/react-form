@@ -96,6 +96,12 @@ export default function useForm({
     }
     e.__handled = true
 
+    for (let retries = 0; retries < 10; retries += 1) {
+      if (apiRef.current.meta.fieldsAreValidating || apiRef.current.meta.isValidating) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+    }
+
     // Don't let invalid forms submit
     if (!apiRef.current.meta.isValid) {
       // If the form can't submit, let's trigger all of the fields
