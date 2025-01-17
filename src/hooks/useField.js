@@ -169,6 +169,9 @@ export default function useField(
 
     const doValidate = async () => {
       try {
+        // A bug fix when updating to React18: setMeta will not cause rerendering until the current JS task is finished
+        await new Promise(resolve => setTimeout(resolve, 0));
+
         const error = await fieldApiRef.current.__validate(
           fieldApiRef.current.value,
           fieldApiRef.current

@@ -222,6 +222,9 @@ export default function useForm({
 
     const doValidation = async () => {
       try {
+        // A bug fix when updating to React18: setMeta will not cause rerendering until the current JS task is finished
+        await new Promise(resolve => setTimeout(resolve, 0));
+
         const error = await metaRef.current.validate(
           apiRef.current.values,
           apiRef.current

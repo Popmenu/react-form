@@ -612,6 +612,10 @@ function useForm() {
 
     var doValidation = async function doValidation() {
       try {
+        // A bug fix when updating to React18: setMeta will not cause rerendering until the current JS task is finished
+        await new Promise(function (resolve) {
+          return setTimeout(resolve, 0);
+        });
         var error = await metaRef.current.validate(apiRef.current.values, apiRef.current);
 
         if (checkLatest()) {
@@ -983,6 +987,10 @@ function useField(fieldName) {
 
     var doValidate = async function doValidate() {
       try {
+        // A bug fix when updating to React18: setMeta will not cause rerendering until the current JS task is finished
+        await new Promise(function (resolve) {
+          return setTimeout(resolve, 0);
+        });
         var error = await fieldApiRef.current.__validate(fieldApiRef.current.value, fieldApiRef.current);
 
         if (checkLatest()) {
