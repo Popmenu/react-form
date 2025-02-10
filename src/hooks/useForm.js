@@ -173,6 +173,8 @@ export default function useForm({
     }))
 
     try {
+      // A bug fix when updating to React18: setMeta/setFieldMeta will not cause rerendering until the current JS task is finished
+      await new Promise(resolve => setTimeout(resolve, 0));
       // Run the submit code
       await apiRef.current.onSubmit(apiRef.current.values, apiRef.current)
 
@@ -222,7 +224,7 @@ export default function useForm({
 
     const doValidation = async () => {
       try {
-        // A bug fix when updating to React18: setMeta will not cause rerendering until the current JS task is finished
+        // A bug fix when updating to React18: setMeta/setFieldMeta will not cause rerendering until the current JS task is finished
         await new Promise(resolve => setTimeout(resolve, 0));
 
         const error = await metaRef.current.validate(
