@@ -806,8 +806,12 @@ function useForm() {
 
   React.useEffect(function () {
     if (shouldResubmit) {
-      handleSubmit(shouldResubmit);
-      setShouldResubmit(false);
+      setShouldResubmit(false); // React 18: handleSubmit may need to set shouldResubmit to true to trigger this effect again.
+      // This setTimeout is to ensure that the effect is triggered after the state has been updated (see React concurrent mode).
+
+      setTimeout(function () {
+        handleSubmit(shouldResubmit);
+      }, 0);
     }
   }, [handleSubmit, shouldResubmit]); // When the form gets dirty and when the value changes
   // validate

@@ -448,8 +448,12 @@ export default function useForm({
   // If shouldResubmit is true, do yo thang
   React.useEffect(() => {
     if (shouldResubmit) {
-      handleSubmit(shouldResubmit)
       setShouldResubmit(false)
+      // React 18: handleSubmit may need to set shouldResubmit to true to trigger this effect again.
+      // This setTimeout is to ensure that the effect is triggered after the state has been updated (see React concurrent mode).
+      setTimeout(() => {
+        handleSubmit(shouldResubmit)
+      }, 0);
     }
   }, [handleSubmit, shouldResubmit])
 
