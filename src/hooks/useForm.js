@@ -173,6 +173,8 @@ export default function useForm({
     }))
 
     try {
+      // A bug fix when updating to React18: setMeta/setFieldMeta will not cause rerendering until the current JS task is finished
+      await new Promise(resolve => setTimeout(resolve, 0));
       // Run the submit code
       await apiRef.current.onSubmit(apiRef.current.values, apiRef.current)
 
@@ -222,6 +224,9 @@ export default function useForm({
 
     const doValidation = async () => {
       try {
+        // A bug fix when updating to React18: setMeta/setFieldMeta will not cause rerendering until the current JS task is finished
+        await new Promise(resolve => setTimeout(resolve, 0));
+
         const error = await metaRef.current.validate(
           apiRef.current.values,
           apiRef.current
@@ -443,8 +448,12 @@ export default function useForm({
   // If shouldResubmit is true, do yo thang
   React.useEffect(() => {
     if (shouldResubmit) {
-      handleSubmit(shouldResubmit)
       setShouldResubmit(false)
+      // React 18: handleSubmit may need to set shouldResubmit to true to trigger this effect again.
+      // This setTimeout is to ensure that the effect is triggered after the state has been updated (see React concurrent mode).
+      setTimeout(() => {
+        handleSubmit(shouldResubmit)
+      }, 0);
     }
   }, [handleSubmit, shouldResubmit])
 

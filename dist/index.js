@@ -570,7 +570,11 @@ function useForm() {
     });
 
     try {
-      // Run the submit code
+      // A bug fix when updating to React18: setMeta/setFieldMeta will not cause rerendering until the current JS task is finished
+      await new Promise(function (resolve) {
+        return setTimeout(resolve, 0);
+      }); // Run the submit code
+
       await apiRef.current.onSubmit(apiRef.current.values, apiRef.current);
       apiRef.current.setMeta({
         isSubmitted: true
@@ -618,6 +622,10 @@ function useForm() {
 
     var doValidation = async function doValidation() {
       try {
+        // A bug fix when updating to React18: setMeta/setFieldMeta will not cause rerendering until the current JS task is finished
+        await new Promise(function (resolve) {
+          return setTimeout(resolve, 0);
+        });
         var error = await metaRef.current.validate(apiRef.current.values, apiRef.current);
 
         if (checkLatest()) {
@@ -798,8 +806,12 @@ function useForm() {
 
   React.useEffect(function () {
     if (shouldResubmit) {
-      handleSubmit(shouldResubmit);
-      setShouldResubmit(false);
+      setShouldResubmit(false); // React 18: handleSubmit may need to set shouldResubmit to true to trigger this effect again.
+      // This setTimeout is to ensure that the effect is triggered after the state has been updated (see React concurrent mode).
+
+      setTimeout(function () {
+        handleSubmit(shouldResubmit);
+      }, 0);
     }
   }, [handleSubmit, shouldResubmit]); // When the form gets dirty and when the value changes
   // validate
@@ -989,6 +1001,10 @@ function useField(fieldName) {
 
     var doValidate = async function doValidate() {
       try {
+        // A bug fix when updating to React18: setMeta/setFieldMeta will not cause rerendering until the current JS task is finished
+        await new Promise(function (resolve) {
+          return setTimeout(resolve, 0);
+        });
         var error = await fieldApiRef.current.__validate(fieldApiRef.current.value, fieldApiRef.current);
 
         if (checkLatest()) {
