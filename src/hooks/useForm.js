@@ -96,7 +96,7 @@ export default function useForm({
     }
     e.__handled = true
 
-    for (let retries = 0; retries < 10; retries += 1) {
+    for (let retries = 0; retries < 50; retries += 1) {
       if (apiRef.current.meta.fieldsAreValidating || apiRef.current.meta.isValidating) {
         await new Promise(resolve => setTimeout(resolve, 100));
       }

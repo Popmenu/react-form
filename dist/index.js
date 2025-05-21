@@ -488,7 +488,7 @@ function useForm() {
 
     e.__handled = true;
 
-    for (var retries = 0; retries < 10; retries += 1) {
+    for (var retries = 0; retries < 50; retries += 1) {
       if (apiRef.current.meta.fieldsAreValidating || apiRef.current.meta.isValidating) {
         await new Promise(function (resolve) {
           return setTimeout(resolve, 100);
